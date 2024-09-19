@@ -1,4 +1,3 @@
-const result = document.querySelector (".result")
 function calculateAge(dob) {
     const birthDate = new Date(dob);
     const today = new Date();
@@ -30,7 +29,7 @@ function calculateAge(dob) {
 
 // Function to generate a random phone number
 function generateRandomPhoneNumber() {
-    let phoneNumber = '+370 '; 
+    let phoneNumber = '+370'; 
     for (let i = 0; i < 8; i++) {
         phoneNumber += Math.floor(Math.random() * 10);
     }
@@ -51,8 +50,8 @@ function submitForm() {
     const result = document.querySelector(".result");
     
     // Validation to ensure no empty fields
-    if (name === "" || email === "" || phone === "" || dob === "") {
-        result.innerText = (`Please fill out all fields`);
+    if (name === "" || email === "" || phone === "" || dob === "" || gender === "") {
+        result.innerText = 'Please fill out all fields and select a gender';
         result.style.display = 'block';
         return;
     }
@@ -71,7 +70,7 @@ function submitForm() {
         return;
     }
     // Phone validation
-    const phonePattern = /^\+370 \d{8}$/;
+    const phonePattern = /^\+370\d{8}$/;
     if (!phonePattern.test(phone)) {
         result.innerText = 'Phone number must contain +370 and 8 more digits';
         result.style.display = 'block';
@@ -125,3 +124,6 @@ function submitForm() {
     document.getElementById('dob').value = "";
     document.getElementById('gender').value = "";
 }
+
+
+
