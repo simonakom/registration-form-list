@@ -2,5 +2,5 @@
 
 This assignment is about creating simple registration form and displaying registered poeple using html, css, javascript.
 
-<h4>🔹 Registartion form sample - <a href="https://simonakom.github.io/registration-form/registration.html" style="font-size:small;">View</a><h4>
+<h4>🔹 Registartion form sample - <a href="https://simonakom.github.io/registration-form-list/registration.html" style="font-size:small;">View</a><h4>
 
