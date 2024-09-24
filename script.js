@@ -65,6 +65,9 @@ function validateFields(name, email, phone, dob, gender) {
     if (!emailPattern.test(email)) {
         return 'Please enter a valid email address';
     }
+    if (existingEmails.includes(email)) {
+        return 'A person with this email already exists';
+    }
 
     // Check if email already exists
     if (existingEmails.includes(email)) {

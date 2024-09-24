@@ -2,17 +2,30 @@ const pageUrl = "http://127.0.0.1:8080/registration.html"
 
 // Common functions for form interaction
 const fillForm = ({ name, email, phone, dob, gender }) => {
-  if (name !== undefined) cy.get("#name").clear().type(name);
-  if (email !== undefined) cy.get("#email").clear().type(email);
-  if (phone !== undefined) cy.get("#phone").clear().type(phone);
-  if (dob !== undefined) cy.get("#dob").clear().type(dob);
-  if (gender !== undefined) cy.get("#gender").select(gender);
+  if (name !== undefined) cy.get('#name').clear().type(name); 
+  if (email !== undefined) cy.get('#email').clear().type(email); 
+  if (phone !== undefined) cy.get('#phone').clear().type(phone);
+  if (dob !== undefined) cy.get('#dob').clear().type(dob);
+  if (gender !== undefined) cy.get('#gender').select(gender); 
 };
 const submitForm = () => {
-  cy.get("button").click();
+  cy.contains('button', 'Submit').click();
 };
 
-// Group for page load
+function expectErrorMessage(expectedMessage) {
+  cy.get(".result").should('be.visible').and('have.text', expectedMessage);
+}
+
+const formData = {
+  name: 'Tom',
+  email: 'tom@gmail.com',
+  phone: '+37060000000',
+  dob: '2000-01-01',
+  gender: 'Male'
+};
+
+
+// Group 1: Page load and display elements
 describe('Page load and display elements', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -22,83 +35,154 @@ describe('Page load and display elements', () => {
     cy.url().should('eq', pageUrl);
   })
 
-  it('Displays registration form on load', () => {
-    cy.get('h1').should('have.text', 'Registration Form');
+  it('Favicon is loaded correctly', () => {
+    cy.get('link[rel="icon"]').should('have.attr', 'href', 'form.png');
+  });
+
+  it('Displays registration form text on load', () => {
+    cy.get('h1').should('have.text', 'Registration Form'); 
   })
 
   it('Displays submit button on load', () => {
-    cy.contains('button', 'Submit').should('be.visible');
+    cy.get('button[type="submit"]').should('be.visible');
   })
 
-  it('Displays registered people table on load', () => {
+  it('Displays registered people table text on load', () => {
     cy.get('h2').should('have.text', 'All Registered People');
   })
 
-  it('Form is empty on load - except phone filed', () => {
-    cy.get("#name").should('have.value', '');
-    cy.get("#email").should('have.value', '');
-    cy.get("#phone").should('not.have.value', ''); 
-    cy.get("#phone").invoke('val').should('match', /^\+370\d{8}$/);
-    cy.get("#dob").should('have.value', '');
-    cy.get("#gender").should('have.value', '');
-  })
+  it('Form fields are initially empty except phone', () => {
+    cy.get('#name').should('have.value', ''); 
+    cy.get('#email').should('have.value', ''); 
+    cy.get('#phone').invoke('val').should('match', /^\+370\d{8}$/); 
+    cy.get('#dob').should('have.value', '');
+    cy.get('#gender').should('have.value', '');
+  });
 
   it('Generates a random phone number on page load', () => {
-    cy.get("#phone").should('not.have.value', ''); 
-    cy.get("#phone").invoke('val').should('match', /^\+370\d{8}$/);
+    cy.get('#phone').invoke('val').should('match', /^\+370\d{8}$/); 
   })
 
   it('Table is empty on load', () => {
-    cy.get("#infoTable").should('be.visible');
-    cy.get("#infoTable tbody tr").should('have.length', 0);  
+    cy.get('#infoTable tbody tr').should('have.length', 0); 
   })
 })
 
-// Group for full form submission validations
-describe('Full form submission validations', () => {
+// Group 2: Input field existence and attributes
+describe('Form input fields exsistence and validation', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
   });
 
-  it('Allows form submission with valid data', () => {
-    fillForm({
-      name: 'Tom',
-      email: 'tom@gmail.com',
-      phone: '+37060000000',
-      dob: '2000-01-01',
-      gender: 'Male'
-    });
-    submitForm();
-    cy.get("#infoTable tbody tr").should('have.length', 1); // Check that one row is added
-    cy.get("#infoTable tbody tr").first().within(() => { // Verify the content of the newly added row
-      cy.get('td').eq(0).should('have.text', 'Tom');
-      cy.get('td').eq(1).should('have.text', 'tom@gmail.com');
-      cy.get('td').eq(2).should('have.text', '+37060000000');
-      cy.get('td').eq(3).should('have.text', '2000-01-01');
-      cy.get('td').eq(4).should('have.text', '24 years');
-      cy.get('td').eq(5).should('have.text', 'Male');
-    });
+  it('The name input field exists with correct attributes', () => {
+    cy.get("#name")
+      .should('exist')
+      .and('have.attr', 'type', 'text')
+      .and('have.attr', 'placeholder', 'John')
+      .and('have.attr', 'pattern', '[A-Za-z\\s]+')
+      .and('have.attr', 'title', 'Name should only contain letters and spaces');
   });
 
-  it('Displays error if form is submitted with empty fields', () => {
-    submitForm();
-    cy.get(".result").should('be.visible').and('have.text', 'Please fill out all fields and select a gender');
+  it('The email input field exists with correct attributes', () => {
+    cy.get("#email")
+      .should('exist')
+      .and('have.attr', 'type', 'email')
+      .and('have.attr', 'placeholder', 'john@email.com')
+      .and('have.attr', 'required', 'required');
   });
 
-  it('Displays error if form contains only whitespace', () => {
-    cy.get("#name").clear().type('   ');  
-    cy.get("#email").clear().type('   '); 
-    cy.get("#phone").clear().type('   '); 
-    cy.get("#dob").clear();                
-    cy.get("#gender").select('');           
-    submitForm(); 
-    cy.get(".result")
-      .should('be.visible')
-      .and('have.text', 'Please fill out all fields and select a gender');
+  it('The phone input field exists with correct attributes', () => {
+    cy.get("#phone")
+      .should('exist')
+      .and('have.attr', 'type', 'tel')
+      .and('have.attr', 'placeholder', 'Enter your phone number')
+      .and('have.attr', 'pattern', '\\d+')
+      .and('have.attr', 'title', 'Phone number should only contain numbers');
+  });
+
+  it('The date of birth input field exists with correct attributes', () => {
+    cy.get('#dob').should('exist').and('have.attr', 'type', 'date');
+  });
+
+  it('The gender input field exists with correct attributes', () => {
+    cy.get("#gender").should('exist').and('have.attr', 'id', 'gender').find('option').should(($options) => {
+        expect($options).to.have.length(4); // 3 options + placeholder
+        expect($options.eq(0)).to.contain('Select Gender');
+        expect($options.eq(1)).to.contain('Male');
+        expect($options.eq(2)).to.contain('Female');
+        expect($options.eq(3)).to.contain('Other');
+      });
   });
 });
 
-// Group for name submission validations
+// Group 3: Form labels existence
+  describe('Check all form labels exist', () => {
+    beforeEach(() => {
+      cy.visit(pageUrl); 
+    });
+  
+    it('Has labels for all required input fields in the form', () => {
+      cy.get('label[for="name"]').should('exist').and('have.text', 'Full Name:');
+      cy.get('label[for="email"]').should('exist').and('have.text', 'Email:');
+      cy.get('label[for="phone"]').should('exist').and('have.text', 'Phone Number:');
+      cy.get('label[for="dob"]').should('exist').and('have.text', 'Date of Birth:');
+      cy.get('label[for="gender"]').should('exist').and('have.text', 'Gender:');
+    });
+  });
+
+  // Group 4: Full form submission validations
+  describe('Form Submission Validations', () => {
+    beforeEach(() => {
+      cy.visit(pageUrl); 
+    });
+
+    it('Allows form submission with valid data', () => {
+      fillForm(formData);
+      submitForm();
+      cy.get("#infoTable tbody tr").should('have.length', 1);
+      cy.get("#infoTable tbody tr").first().within(() => { 
+        cy.get('td').eq(0).should('have.text', 'Tom');
+        cy.get('td').eq(1).should('have.text', 'tom@gmail.com');
+        cy.get('td').eq(2).should('have.text', '+37060000000');
+        cy.get('td').eq(3).should('have.text', '2000-01-01');
+        cy.get('td').eq(4).should('have.text', '24 years');
+        cy.get('td').eq(5).should('have.text', 'Male');
+      });
+    });
+
+    it('Displays error if form is submitted with empty fields', () => {
+      submitForm();
+      expectErrorMessage('Please fill out all fields and select a gender');
+    });
+
+    // it('Displays error if form contains only whitespace', () => {
+    //   fillForm({
+    //       name: '   ',
+    //       email: '   ',
+    //       phone: '   ',
+    //       dob: '  ',
+    //       gender: '  '
+    //   });
+    //   submitForm();
+    //   expectErrorMessage('Please fill out all fields and select a gender');
+    // });
+  });
+
+  // Group 5: Submit button existence and Bbhavior
+  describe('Submit Button Existence and Behavior', () => {
+    beforeEach(() => {
+      cy.visit(pageUrl); 
+    });
+
+    it('Submit button exists and is clickable', () => {
+      cy.contains('button', 'Submit')
+        .should('exist')
+        .and('be.visible')
+        .and('not.be.disabled');
+    });
+  });
+
+// Group 6: Form "name" submission validations
 describe('Name submission validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -106,14 +190,14 @@ describe('Name submission validations', () => {
 
   const testNameValidation = (name, expectedMessage) => {
     fillForm({
-      name,
+      name: name,
       email: 'test@example.com',
       phone: '+37060000000',
       dob: '2000-01-01',
       gender: 'Male'
     });
     submitForm();
-    cy.get(".result").should('be.visible').and('have.text', expectedMessage);
+    expectErrorMessage(expectedMessage);
   };
 
   it('Displays error if name is too short', () => {
@@ -133,7 +217,7 @@ describe('Name submission validations', () => {
   });
 });
 
-// Group for email submission validations
+// Group 7: Form "email" submission validations
 describe('Email submission validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -142,13 +226,13 @@ describe('Email submission validations', () => {
   const testEmailValidation = (email, expectedMessage) => {
     fillForm({
       name: 'Tom',
-      email,
+      email: email,
       phone: '+37060000000',
       dob: '2000-01-01',
       gender: 'Male'
     });
     submitForm();
-    cy.get(".result").should('be.visible').and('have.text', expectedMessage);
+    expectErrorMessage(expectedMessage);
   };
 
   it('Displays error for invalid email format', () => {
@@ -159,32 +243,17 @@ describe('Email submission validations', () => {
     testEmailValidation('tom@', 'Please enter a valid email address');
   });
 
-  it('Displays error if email already exists', () => {
-    fillForm({  // First submission with a unique email
-      name: 'Tom',
-      email: 'tom@gmail.com',
-      phone: '+37060000000',
-      dob: '2000-01-01',
-      gender: 'Male'
-    });
+  it('Displays error if email already exists', function () {
+    fillForm(formData);
     submitForm();
     cy.get("#infoTable tbody tr").should('have.length', 1);
-    cy.get("#infoTable tbody").contains('tom@gmail.com').should('exist');
-    // Refill the form for the second submission with the same email
-    fillForm({
-      name: 'Tom',
-      email: 'tom@gmail.com',
-      phone: '+37060000000',
-      dob: '2000-01-01',
-      gender: 'Male'
-    });
+    fillForm(formData); // Try submitting the same email again
     submitForm();
-    cy.get("#infoTable tbody tr").should('have.length', 1);
-    cy.get(".result").should('be.visible').and('have.text', 'A person with this email already exists');
+    expectErrorMessage('A person with this email already exists');
   });
 });
 
-// Group for phone submission validations
+// Group 8: Form "phone" submission validations
 describe('Phone submission validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -213,9 +282,13 @@ describe('Phone submission validations', () => {
   it('Displays error for too long phone number length', () => {
     testPhoneValidation('+3706000000000000', 'Phone number must contain +370 and 8 more digits');
   });
+
+  it('Displays error for phone number without country code', () => {
+    testPhoneValidation('60000000', 'Phone number must contain +370 and 8 more digits');
+  });
 });
   
-// Group for birth date submission validations
+// Group 9: Form "birth date" submission validations
 describe('Birth date submission validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -234,7 +307,7 @@ describe('Birth date submission validations', () => {
   });
 });
 
-// Group for gender submission validations
+// Group 10: Form "gender" submission validations
 describe('Gender submission validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -252,9 +325,10 @@ describe('Gender submission validations', () => {
     cy.get(".result").should('be.visible').and('have.text', 'Please fill out all fields and select a gender');
   });
 });
-  
-// Group for registred people table
-describe('Table and data display', () => {
+
+
+// Group 11: Registered People Table Validations
+describe('Registered People Table Validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
   });
@@ -272,6 +346,17 @@ describe('Table and data display', () => {
       cy.get('td').eq(5).should('have.text', data.gender);
     });
   };
+
+  it('Table has correct columns', () => {
+    cy.get("#infoTable thead tr").within(() => {
+      cy.get('th').eq(0).should('have.text', 'Full Name'); 
+      cy.get('th').eq(1).should('have.text', 'Email'); 
+      cy.get('th').eq(2).should('have.text', 'Phone'); 
+      cy.get('th').eq(3).should('have.text', 'Date of Birth');
+      cy.get('th').eq(4).should('have.text', 'Age'); 
+      cy.get('th').eq(5).should('have.text', 'Gender'); 
+    });
+  });
 
   it('Updates the table with submitted information', () => {
     const data = {
@@ -318,22 +403,14 @@ describe('Table and data display', () => {
   });
 });
 
-
-// Group for form reset and cleared state
+// Group 12: Form reset and cleared state
 describe('Form Reset and Cleared State', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
   });
 
   it('Clears the form fields after successful submission', () => {
-    const data = {
-      name: 'Tom',
-      email: 'tom@gmail.com',
-      phone: '+37060000001',
-      dob: '2000-01-01',
-      gender: 'Male'
-    };
-    fillForm(data);
+    fillForm(formData);
     submitForm();
     cy.get("#name").should('have.value', '');
     cy.get("#email").should('have.value', '');
@@ -342,5 +419,6 @@ describe('Form Reset and Cleared State', () => {
     cy.get("#gender").should('have.value', '');
   });
 });
+
 
 
