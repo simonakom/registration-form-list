@@ -15,7 +15,7 @@ body {
 }
 
 /* Registration form */
-.result {
+.message {
     display: none; 
     background-color: rgba(192, 80, 110, 0.487);
     color:  #ffffff;

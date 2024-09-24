@@ -119,17 +119,17 @@ function submitForm() {
     const phone = document.getElementById('phone').value;
     const dob = document.getElementById('dob').value;
     const gender = document.getElementById('gender').value;
-    const result = document.querySelector(".result");
+    const message = document.querySelector(".message");
 
-    // Clear previous result message
-    result.innerText = ''; 
-    result.style.display = 'none'; 
+    // Clear previous message message
+    message.innerText = ''; 
+    message.style.display = 'none'; 
 
     // Validate input fields
     const validationError = validateFields(name, email, phone, dob, gender);
     if (validationError) {
-        result.innerText = validationError;
-        result.style.display = 'block';
+        message.innerText = validationError;
+        message.style.display = 'block';
         return;
     }
 
@@ -141,7 +141,6 @@ function submitForm() {
 
     // Add the email to the list of existing emails
     existingEmails.push(email);
-
     
     // Clear input fields after submission
     document.getElementById('name').value = "";
