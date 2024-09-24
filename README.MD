@@ -1,6 +1,6 @@
 # <span><img src="./form.png" alt=registration style="height: 1em; vertical-align: middle;"></span>  Registration form
 
-This assignment is about creating simple registration form and displaying registered poeple using html, css, javascript. Also, testing the registration form with cypress.
+This assignment is about creating simple registration form using html, css, javascript and testing it with automated tests using Cypress.
 
 <h4>🔹 Check the registration form here - <a href="https://simonakom.github.io/registration-form-list/registration.html" style="font-size:small;">View</a><h4>
 
@@ -41,7 +41,6 @@ Before you begin, ensure you have the following installed on your machine:
   }
 ````
 - To run and open 'Cypress':  `npm run test`.
-
 - In Cypress UI choose E2E Testing in preffered browser and create new `spec` or choose existing `spec`. 
 - You should find a test file in code editor: `cypress/e2e/fileName.cy.js`.
 
@@ -50,4 +49,6 @@ Before you begin, ensure you have the following installed on your machine:
 - Open one terminal window and run the app -> `npm run dev`.
 - Open another terminal window and execute the test script -> `npm run test`
 
+## Automated tests with Cypress
 
+Tests can be found: `cypress/e2e/testsWithCommands.cy.js`
