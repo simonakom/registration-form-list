@@ -1,6 +1,5 @@
 const pageUrl = "http://127.0.0.1:8080/registration.html"
 
-// Common functions for form interaction
 const fillForm = ({ name, email, phone, dob, gender }) => {
   if (name !== undefined) cy.get('#name').clear().type(name); 
   if (email !== undefined) cy.get('#email').clear().type(email); 
@@ -68,7 +67,7 @@ describe('Page load and display elements', () => {
   })
 })
 
-// Group 2: Input field existence and attributes
+// Group 2: Form input field existence and validation
 describe('Form input fields exsistence and validation', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -116,7 +115,7 @@ describe('Form input fields exsistence and validation', () => {
 });
 
 // Group 3: Form labels existence
-  describe('Check all form labels exist', () => {
+  describe('Form labels exsistence', () => {
     beforeEach(() => {
       cy.visit(pageUrl); 
     });
@@ -130,18 +129,21 @@ describe('Form input fields exsistence and validation', () => {
     });
   });
 
-  // Group 4: Full form submission validations
-  describe('Form Submission Validations', () => {
+  // Group 4: Form submission validations
+  describe('Form submission validations', () => {
     beforeEach(() => {
       cy.visit(pageUrl); 
     });
+
+  // Full form submission validations
+  describe('Full form submission validations', () => {
 
     it('Allows form submission with valid data', () => {
       fillForm(formData);
       submitForm();
       cy.get("#infoTable tbody tr").should('have.length', 1);
       cy.get("#infoTable tbody tr").first().within(() => { 
-        cy.get('td').eq(0).should('have.text', 'Tom');
+        cy.get('td').eq(0).should('have.text', formData.name);
         cy.get('td').eq(1).should('have.text', 'tom@gmail.com');
         cy.get('td').eq(2).should('have.text', '+37060000000');
         cy.get('td').eq(3).should('have.text', '2000-01-01');
@@ -168,25 +170,8 @@ describe('Form input fields exsistence and validation', () => {
     // });
   });
 
-  // Group 5: Submit button existence and Bbhavior
-  describe('Submit Button Existence and Behavior', () => {
-    beforeEach(() => {
-      cy.visit(pageUrl); 
-    });
-
-    it('Submit button exists and is clickable', () => {
-      cy.contains('button', 'Submit')
-        .should('exist')
-        .and('be.visible')
-        .and('not.be.disabled');
-    });
-  });
-
-// Group 6: Form "name" submission validations
+// Form "name" submission validations
 describe('Name submission validations', () => {
-  beforeEach(() => {
-    cy.visit(pageUrl); 
-  });
 
   const testNameValidation = (name, expectedMessage) => {
     fillForm({
@@ -217,11 +202,8 @@ describe('Name submission validations', () => {
   });
 });
 
-// Group 7: Form "email" submission validations
+// Form "email" submission validations
 describe('Email submission validations', () => {
-  beforeEach(() => {
-    cy.visit(pageUrl); 
-  });
 
   const testEmailValidation = (email, expectedMessage) => {
     fillForm({
@@ -247,17 +229,14 @@ describe('Email submission validations', () => {
     fillForm(formData);
     submitForm();
     cy.get("#infoTable tbody tr").should('have.length', 1);
-    fillForm(formData); // Try submitting the same email again
+    fillForm(formData); 
     submitForm();
     expectErrorMessage('A person with this email already exists');
   });
 });
 
-// Group 8: Form "phone" submission validations
+// Form "phone" submission validations
 describe('Phone submission validations', () => {
-  beforeEach(() => {
-    cy.visit(pageUrl); 
-  });
 
   const testPhoneValidation = (phone, expectedMessage) => {
     fillForm({
@@ -272,11 +251,11 @@ describe('Phone submission validations', () => {
   };
 
   it('Displays error for phone number that contains letters', () => {
-    testPhoneValidation('+370600000abcabc', 'Phone number must contain +370 and 8 more digits');
+    testPhoneValidation('+370600abcabc', 'Phone number must contain +370 and 8 more digits');
   });
 
   it('Displays error for too short phone number length', () => {
-    testPhoneValidation('+370600000', 'Phone number must contain +370 and 8 more digits');
+    testPhoneValidation('+370600', 'Phone number must contain +370 and 8 more digits');
   });
 
   it('Displays error for too long phone number length', () => {
@@ -288,11 +267,8 @@ describe('Phone submission validations', () => {
   });
 });
   
-// Group 9: Form "birth date" submission validations
+// Form "birth date" submission validations
 describe('Birth date submission validations', () => {
-  beforeEach(() => {
-    cy.visit(pageUrl); 
-  });
 
   it('Displays error when date of birth is in the future', () => {
     fillForm({
@@ -307,11 +283,8 @@ describe('Birth date submission validations', () => {
   });
 });
 
-// Group 10: Form "gender" submission validations
+// Form "gender" submission validations
 describe('Gender submission validations', () => {
-  beforeEach(() => {
-    cy.visit(pageUrl); 
-  });
 
   it('Displays error when no gender is selected', () => {
     fillForm({
@@ -326,8 +299,23 @@ describe('Gender submission validations', () => {
   });
 });
 
+})
 
-// Group 11: Registered People Table Validations
+  // Group 5: Submit button existence and Behavior
+  describe('Submit button existence and behavior', () => {
+    beforeEach(() => {
+      cy.visit(pageUrl); 
+    });
+
+    it('Submit button exists and is clickable', () => {
+      cy.contains('button', 'Submit')
+        .should('exist')
+        .and('be.visible')
+        .and('not.be.disabled');
+    });
+  });
+
+// Group 6: Registered People Table Validations
 describe('Registered People Table Validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
@@ -403,7 +391,7 @@ describe('Registered People Table Validations', () => {
   });
 });
 
-// Group 12: Form reset and cleared state
+// Group 7: Form reset and cleared state
 describe('Form Reset and Cleared State', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
