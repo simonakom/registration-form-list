@@ -1,5 +1,13 @@
 const pageUrl = "http://127.0.0.1:8080/registration.html"
 
+const formData = {
+  name: 'Tom',
+  email: 'tom@gmail.com',
+  phone: '+37060000000',
+  dob: '2000-01-01',
+  gender: 'Male'
+};
+
 const fillForm = ({ name, email, phone, dob, gender }) => {
   if (name !== undefined) {
     cy.get('#name').clear();
@@ -18,25 +26,17 @@ const fillForm = ({ name, email, phone, dob, gender }) => {
     if (dob.trim() !== '') cy.get('#dob').type(dob);
   }
   if (gender !== undefined && gender !== '') {
-    cy.get('#gender').select(gender);
+    cy.get('label[for="gender"]').next('select').select(gender);
   }
 };
 
 const submitForm = () => {
-  cy.contains('button', 'Submit').click();
+  cy.get('button[type="submit"]').contains('Submit').click();
 };
 
 function expectErrorMessage(expectedMessage) {
   cy.get(".message").should('be.visible').and('have.text', expectedMessage);
 }
-
-const formData = {
-  name: 'Tom',
-  email: 'tom@gmail.com',
-  phone: '+37060000000',
-  dob: '2000-01-01',
-  gender: 'Male'
-};
 
 // --------------------------------------Test Suits---------------------------------------------
 
@@ -137,9 +137,6 @@ describe('"Registration" form input fields/labels existence and validation', () 
     });
 
     describe('"Registration" form labels existence and validation', () => {
-      beforeEach(() => {
-        cy.visit(pageUrl); 
-      });
     
       it('Form has labels for all required input fields', () => {
         cy.get('label[for="name"]').should('exist').and('have.text', 'Full Name:');
@@ -287,6 +284,10 @@ describe('"Registration" form submission validations', () => {
 
     it('Displays error for phone number without country code', () => {
       testPhoneValidation('60000000', 'Phone number must contain +370 and 8 more digits');
+    });
+
+    it('Displays error for phone number with spaces', () => {
+      testPhoneValidation('370888 8888', 'Phone number must contain +370 and 8 more digits');
     });
   });
     
