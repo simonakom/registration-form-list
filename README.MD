@@ -46,8 +46,7 @@ Before you begin, ensure you have the following installed on your machine:
   }
 ````
 - To run and open 'Cypress':  `npm run test`.
-- In Cypress UI choose E2E Testing in preffered browser and create new `spec` or choose existing `spec`. 
-- You should find a test file in code editor: `cypress/e2e/fileName.cy.js`.
+- In Cypress UI choose E2E Testing in preffered browser and  choose existing "spec": `testsWithCommands.cy.js`. 
 
 ## Run
 
