@@ -1,3 +1,7 @@
+// Array to store existing emails
+const existingEmails = [];
+
+// Function to calculate age
 function calculateAge(dob) {
     const birthDate = new Date(dob);
     const today = new Date();
@@ -27,6 +31,7 @@ function calculateAge(dob) {
     }
 }
 
+
 // Function to generate a random phone number
 function generateRandomPhoneNumber() {
     let phoneNumber = '+370'; 
@@ -35,60 +40,54 @@ function generateRandomPhoneNumber() {
     }
     return phoneNumber;
 }
+
 // Set the random phone number when the page loads
 window.onload = function() {
     document.getElementById('phone').value = generateRandomPhoneNumber();
 };
 
-function submitForm() {
-    // Get values from input fields
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-    const dob = document.getElementById('dob').value;
-    const gender = document.getElementById('gender').value;
-    const result = document.querySelector(".result");
-    
-    // Validation to ensure no empty fields
+// Function to validate input fields
+function validateFields(name, email, phone, dob, gender) {
+
+    // Check for empty fields
     if (name === "" || email === "" || phone === "" || dob === "" || gender === "") {
-        result.innerText = 'Please fill out all fields and select a gender';
-        result.style.display = 'block';
-        return;
+        return 'Please fill out all fields and select a gender';
     }
-    // Name validation 
-   const namePattern = /^[A-Za-z\s]+$/;
-   if (!namePattern.test(name) || name.length > 50) {
-       result.innerText = 'Name should only contain letters and spaces, and be a maximum of 50 characters';
-       result.style.display = 'block';
-       return;
-   }
+
+    // Name validation
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (!namePattern.test(name) || name.length < 2 || name.length > 50) {
+        return 'Name should only contain letters and spaces, and be between 2 and 50 characters';
+    }
+
     // Email validation
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(email)) {
-        result.innerText = 'Please enter a valid email address';
-        result.style.display = 'block';
-        return;
+        return 'Please enter a valid email address';
     }
+
+    // Check if email already exists
+    if (existingEmails.includes(email)) {
+        return 'A person with this email already exists';
+    }
+
     // Phone validation
     const phonePattern = /^\+370\d{8}$/;
     if (!phonePattern.test(phone)) {
-        result.innerText = 'Phone number must contain +370 and 8 more digits';
-        result.style.display = 'block';
-        return;
+        return 'Phone number must contain +370 and 8 more digits';
     }
-    // Validate date of birth to ensure it is not in the future
-    const dobDate = new Date(dob);
-    const today = new Date();
-    
-    if (dobDate > today) {
-        result.innerText = 'Date of birth cannot be in the future';
-        result.style.display = 'block';
-        return;
-    }
-    // Calculate age based on date of birth
-    const age = calculateAge(dob);
 
-    // Insert the values into the table
+    // Date of birth validation
+    const dobDate = new Date(dob);
+    if (dobDate > new Date()) {
+        return 'Date of birth cannot be in the future';
+    }
+
+    return null; // No errors
+}
+
+// Function to insert the values into the table
+function insertRowIntoTable(name, email, phone, dob, age, gender) {
     const table = document.getElementById("infoTable").getElementsByTagName('tbody')[0];
     const newRow = table.insertRow();
 
@@ -99,24 +98,48 @@ function submitForm() {
     newRow.insertCell(4).innerHTML = age; 
     newRow.insertCell(5).innerHTML = gender; 
 
-    // Apply red background for poeple under 18 years old
-    if (age.includes('years')) {
-        const years = parseInt(age.split(' ')[0]); // Extract the numeric part of the age
-        if (years < 18) {
-            newRow.classList.add('table-row-under-18');
-        }
-    } else if (age.includes('months')) {
-        const months = parseInt(age.split(' ')[0]); // Extract the numeric part of the age
-        if (months < 12 * 18) { // Less than 18 years in months
-            newRow.classList.add('table-row-under-18');
-        }
-    } else if (age.includes('days')) {
-        const days = parseInt(age.split(' ')[0]); // Extract the numeric part of the age
-        if (days < 365 * 18) { // Less than 18 years in days
-            newRow.classList.add('table-row-under-18');
-        }
+    // Check if the person is under 18 and apply red background if true
+    const years = age.includes('years') ? parseInt(age.split(' ')[0]) : 0;
+    const months = age.includes('months') ? parseInt(age.split(' ')[0]) : 0;
+    const days = age.includes('days') ? parseInt(age.split(' ')[0]) : 0;
+
+    // Determine if the person is under 18
+    if (years < 18 || (years === 18 && (months < 0 || (months === 0 && days < 0)))) {
+        newRow.classList.add('table-row-under-18');
+    }
+}
+
+// Function to handle form submission
+function submitForm() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const dob = document.getElementById('dob').value;
+    const gender = document.getElementById('gender').value;
+    const result = document.querySelector(".result");
+
+    // Clear previous result message
+    result.innerText = ''; 
+    result.style.display = 'none'; 
+
+    // Validate input fields
+    const validationError = validateFields(name, email, phone, dob, gender);
+    if (validationError) {
+        result.innerText = validationError;
+        result.style.display = 'block';
+        return;
     }
 
+    // Calculate age based on date of birth
+    const age = calculateAge(dob);
+
+    // Insert the values into the table
+    insertRowIntoTable(name, email, phone, dob, age, gender);
+
+    // Add the email to the list of existing emails
+    existingEmails.push(email);
+
+    
     // Clear input fields after submission
     document.getElementById('name').value = "";
     document.getElementById('email').value = "";
@@ -124,6 +147,3 @@ function submitForm() {
     document.getElementById('dob').value = "";
     document.getElementById('gender').value = "";
 }
-
-
-
