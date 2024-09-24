@@ -31,7 +31,6 @@ function calculateAge(dob) {
     }
 }
 
-
 // Function to generate a random phone number
 function generateRandomPhoneNumber() {
     let phoneNumber = '+370'; 
@@ -68,7 +67,6 @@ function validateFields(name, email, phone, dob, gender) {
     if (existingEmails.includes(email)) {
         return 'A person with this email already exists';
     }
-
     // Check if email already exists
     if (existingEmails.includes(email)) {
         return 'A person with this email already exists';

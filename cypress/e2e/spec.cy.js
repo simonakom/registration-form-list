@@ -152,11 +152,11 @@ describe('"Registration" form input fields/labels existence and validation', () 
 
 });
 
-  // Group 3: Registration form submission validations
-  describe('"Registration" form submission validations', () => {
-    beforeEach(() => {
-      cy.visit(pageUrl); 
-    });
+// Group 3: Registration form submission validations
+describe('"Registration" form submission validations', () => {
+  beforeEach(() => {
+    cy.visit(pageUrl); 
+  });
 
     // Full form submission validations
     describe('Full form submission validations', () => {
@@ -193,7 +193,7 @@ describe('"Registration" form input fields/labels existence and validation', () 
       });
     });
 
-  // "name" submission validations
+  // "Name" submission validations
   describe('Name submission validations', () => {
 
     const testNameValidation = (name, expectedMessage) => {
@@ -225,7 +225,7 @@ describe('"Registration" form input fields/labels existence and validation', () 
     });
   });
 
-  // "email" submission validations
+  // "Email" submission validations
   describe('Email submission validations', () => {
 
     const testEmailValidation = (email, expectedMessage) => {
@@ -258,7 +258,7 @@ describe('"Registration" form input fields/labels existence and validation', () 
     });
   });
 
-  // "phone" submission validations
+  // "Phone" submission validations
   describe('Phone submission validations', () => {
 
     const testPhoneValidation = (phone, expectedMessage) => {
@@ -290,7 +290,7 @@ describe('"Registration" form input fields/labels existence and validation', () 
     });
   });
     
-  // "birth date" submission validations
+  // "Birth date" submission validations
   describe('Birth date submission validations', () => {
 
     it('Displays error when date of birth is in the future', () => {
@@ -306,7 +306,7 @@ describe('"Registration" form input fields/labels existence and validation', () 
     });
   });
 
-  // "gender" submission validations
+  // "Gender" submission validations
   describe('Gender submission validations', () => {
 
     it('Displays error when no gender is selected', () => {
@@ -323,8 +323,8 @@ describe('"Registration" form input fields/labels existence and validation', () 
   });
 })
 
-// Group 4: "Registration" form reset and cleared state
-describe('"Registration" form Reset and cleared state', () => {
+// Group 4: "Registration" form reset
+describe('"Registration" form Reset', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
   });
@@ -393,7 +393,7 @@ describe('"Registered people" table validations', () => {
 
   it('Allows multiple submissions with identical data except email', () => {
     submitAndCheckRow(formData, 1);
-    
+
     const dataWithDifferentEmail = {
       name: 'Tom',
       email: 'tom2@gmail.com',
