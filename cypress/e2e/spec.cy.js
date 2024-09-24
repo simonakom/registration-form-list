@@ -323,8 +323,8 @@ describe('"Registration" form submission validations', () => {
   });
 })
 
-// Group 4: "Registration" form reset
-describe('"Registration" form Reset', () => {
+// Group 4: Registration form reset
+describe('"Registration" form reset', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
   });
@@ -339,7 +339,6 @@ describe('"Registration" form Reset', () => {
     cy.get("#gender").should('have.value', '');
   });
 });
-
 
 // Group 5: Submit button existence and behavior
 describe('Submit button existence and behavior', () => {
@@ -356,7 +355,7 @@ describe('Submit button existence and behavior', () => {
   });
 });
 
-// Group 6: "Registered people" table validations
+// Group 6: Registered people table validations
 describe('"Registered people" table validations', () => {
   beforeEach(() => {
     cy.visit(pageUrl); 
