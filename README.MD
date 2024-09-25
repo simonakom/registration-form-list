@@ -1,6 +1,6 @@
 # <span><img src="./form.png" alt=registration style="height: 1em; vertical-align: middle;"></span>  Registration form
 
-This assignment is about creating simple registration form using html, css, javascript and testing it with automated tests using Cypress.
+This project is about creating simple registration form using html, css, javascript and testing it with automated tests using Cypress.
 
 <h4>🔹 Check the registration form here - <a href="https://simonakom.github.io/registration-form-list/registration.html" style="font-size:small;">View</a><h4>
 
