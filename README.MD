@@ -48,12 +48,12 @@ Before you begin, ensure you have the following installed on your machine:
 ````
 - To run and open 'Cypress' user interface (GUI):  `npm run test`. 
   - In Cypress UI choose E2E Testing in preffered browser and choose existing "spec": `testsWithCommands.cy.js` or `testsWithFunctions.cy.js`.
-- To run Cypress tests in your terminal or command line interface (CLI): `npm run test`. 
+- To run Cypress tests in your terminal or command line interface (CLI): `npm run test:cmd`. 
 
 ## Run
 
 - Open one terminal window and run the app: `npm run dev`.
-- Open another terminal window and execute the test script: `npm run test:cmd`
+- Open another terminal window and execute the test script: `npm run test`
 
 ## Automated tests with Cypress
 
