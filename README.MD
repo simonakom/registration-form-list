@@ -58,4 +58,5 @@ Before you begin, ensure you have the following installed on your machine:
 ## Automated tests with Cypress
 
 - Tests with functions can be found: `cypress/e2e/testsWithFunctions.cy.js`.
-- Tests with functions can be found: `cypress/e2e/testsWithCommands.cy.js`
+- Tests with commands can be found: `cypress/e2e/testsWithCommands.cy.js`.
+  - Commands can be found: `cypress/support/commands.js`.
