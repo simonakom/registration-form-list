@@ -8,36 +8,6 @@ const formData = {
   gender: 'Male'
 };
 
-Cypress.Commands.add('fillForm', ({ name, email, phone, dob, gender }) => {
-  if (name !== undefined) {
-    cy.get('#name').clear();
-    if (name.trim() !== '') cy.get('#name').type(name);
-  }
-  if (email !== undefined) {
-    cy.get('#email').clear();
-    if (email.trim() !== '') cy.get('#email').type(email);
-  }
-  if (phone !== undefined) {
-    cy.get('#phone').clear();
-    if (phone.trim() !== '') cy.get('#phone').type(phone);
-  }
-  if (dob !== undefined) {
-    cy.get('#dob').clear();
-    if (dob.trim() !== '') cy.get('#dob').type(dob);
-  }
-  if (gender !== undefined && gender !== '') {
-    cy.get('label[for="gender"]').next('select').select(gender);
-  }
-});
-
-Cypress.Commands.add('submitForm', () => {
-  cy.get('button[type="submit"]').contains('Submit').click();
-});
-
-Cypress.Commands.add('expectErrorMessage', (expectedMessage) => {
-  cy.get(".message").should('be.visible').and('have.text', expectedMessage);
-});
-
 // --------------------------------------Test Suits---------------------------------------------
 
 // Group 1: Page load and display elements
@@ -188,55 +158,31 @@ describe('"Registration" form submission validations', () => {
 
     // "Name" submission validations
     describe('Name submission validations', () => {
-      const testNameValidation = (name, expectedMessage) => {
-        cy.fillForm({
-          name: name,
-          email: 'test@example.com',
-          phone: '+37060000000',
-          dob: '2000-01-01',
-          gender: 'Male'
-        });
-        cy.submitForm();
-        cy.expectErrorMessage(expectedMessage);
-      };
-
       it('Displays error if name is too short', () => {
-        testNameValidation('A', 'Name should only contain letters and spaces, and be between 2 and 50 characters');
+        cy.testNameValidation('A', 'Name should only contain letters and spaces, and be between 2 and 50 characters');
       });
 
       it('Displays error if name is too long', () => {
-        testNameValidation('A'.repeat(51), 'Name should only contain letters and spaces, and be between 2 and 50 characters');
+        cy.testNameValidation('A'.repeat(51), 'Name should only contain letters and spaces, and be between 2 and 50 characters');
       });
 
       it('Displays error if name contains symbols', () => {
-        testNameValidation('John@#$', 'Name should only contain letters and spaces, and be between 2 and 50 characters');
+        cy.testNameValidation('John@#$', 'Name should only contain letters and spaces, and be between 2 and 50 characters');
       });
 
       it('Displays error if name contains numbers', () => {
-        testNameValidation('John123', 'Name should only contain letters and spaces, and be between 2 and 50 characters');
+        cy.testNameValidation('John123', 'Name should only contain letters and spaces, and be between 2 and 50 characters');
       });
     });
 
     // "Email" submission validations
     describe('Email submission validations', () => {
-      const testEmailValidation = (email, expectedMessage) => {
-        cy.fillForm({
-          name: 'Tom',
-          email: email,
-          phone: '+37060000000',
-          dob: '2000-01-01',
-          gender: 'Male'
-        });
-        cy.submitForm();
-        cy.expectErrorMessage(expectedMessage);
-      };
-
       it('Displays error for invalid email format', () => {
-        testEmailValidation('tom@invalid', 'Please enter a valid email address');
+        cy.testEmailValidation('tom@invalid', 'Please enter a valid email address');
       });
 
       it('Displays error for email without domain', () => {
-        testEmailValidation('tom@', 'Please enter a valid email address');
+        cy.testEmailValidation('tom@', 'Please enter a valid email address');
       });
 
       it('Displays error if email already exists', function () {
@@ -251,36 +197,24 @@ describe('"Registration" form submission validations', () => {
 
     // "Phone" submission validations
     describe('Phone submission validations', () => {
-      const testPhoneValidation = (phone, expectedMessage) => {
-        cy.fillForm({
-          name: 'Tom',
-          email: 'tom@gmail.com',
-          phone: phone,
-          dob: '2000-01-01',
-          gender: 'Male'
-        });
-        cy.submitForm();
-        cy.expectErrorMessage(expectedMessage);
-      };
-
       it('Displays error for phone number that contains letters', () => {
-        testPhoneValidation('+370600abcabc', 'Phone number must contain +370 and 8 more digits');
+        cy.testPhoneValidation('+370600abcabc', 'Phone number must contain +370 and 8 more digits');
       });
 
       it('Displays error for too short phone number length', () => {
-        testPhoneValidation('+370600', 'Phone number must contain +370 and 8 more digits');
+        cy.testPhoneValidation('+370600', 'Phone number must contain +370 and 8 more digits');
       });
 
       it('Displays error for too long phone number length', () => {
-        testPhoneValidation('+3706000000000000', 'Phone number must contain +370 and 8 more digits');
+        cy.testPhoneValidation('+3706000000000000', 'Phone number must contain +370 and 8 more digits');
       });
 
       it('Displays error for phone number without country code', () => {
-        testPhoneValidation('60000000', 'Phone number must contain +370 and 8 more digits');
+        cy.testPhoneValidation('60000000', 'Phone number must contain +370 and 8 more digits');
       });
 
       it('Displays error for phone number with spaces', () => {
-        testPhoneValidation('370888 8888', 'Phone number must contain +370 and 8 more digits');
+        cy.testPhoneValidation('370888 8888', 'Phone number must contain +370 and 8 more digits');
       });
     });
       
@@ -354,20 +288,6 @@ describe('"Registered people" table validations', () => {
     cy.visit(pageUrl); 
   });
 
-  const submitAndCheckRow = (data, expectedRowCount) => {
-    cy.fillForm(data);
-    cy.submitForm();
-    cy.get("#infoTable tbody tr").should('have.length', expectedRowCount);
-    cy.get("#infoTable tbody tr").last().within(() => {
-      cy.get('td').eq(0).should('have.text', data.name);
-      cy.get('td').eq(1).should('have.text', data.email);
-      cy.get('td').eq(2).should('have.text', data.phone);
-      cy.get('td').eq(3).should('have.text', data.dob);
-      cy.get('td').eq(4).should('contain.text', 'years');  
-      cy.get('td').eq(5).should('have.text', data.gender);
-    });
-  };
-
   it('Table has correct columns', () => {
     cy.get("#infoTable thead tr").within(() => {
       cy.get('th').eq(0).should('have.text', 'Full Name'); 
@@ -380,11 +300,11 @@ describe('"Registered people" table validations', () => {
   });
 
   it('Table is updated successfully with submitted information from form', () => {
-    submitAndCheckRow(formData, 1);
+    cy.submitAndCheckRow(formData, 1);
   });
 
   it('Allows multiple submissions with identical data except email', () => {
-    submitAndCheckRow(formData, 1);
+    cy.submitAndCheckRow(formData, 1);
     const dataWithDifferentEmail = {
       name: 'Tom',
       email: 'tom2@gmail.com',
@@ -392,7 +312,7 @@ describe('"Registered people" table validations', () => {
       dob: '2000-01-01',
       gender: 'Male'
     };
-    submitAndCheckRow(dataWithDifferentEmail, 2);
+    cy.submitAndCheckRow(dataWithDifferentEmail, 2);
   });
 
   it('Does not add red background for users over 18 years old', () => {

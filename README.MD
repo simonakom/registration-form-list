@@ -37,22 +37,25 @@ Before you begin, ensure you have the following installed on your machine:
 ## Set up of Cypress
 
 - Install Cypress library: `npm install cypress -D`.
-- Add a new test script to 'package.json': 
+- Add a new test scripts to 'package.json': 
 
 ````
   "scripts": {
-     "dev": "http-server",
-     "test": "npx cypress open"
+    "dev": "http-server",
+    "test": "npx cypress open",
+    "test:cmd": "npx cypress run"
   }
 ````
-- To run and open 'Cypress':  `npm run test`.
-- In Cypress UI choose E2E Testing in preffered browser and choose existing "spec": `testsWithCommands.cy.js`. 
+- To run and open 'Cypress' user interface (GUI):  `npm run test`. 
+  - In Cypress UI choose E2E Testing in preffered browser and choose existing "spec": `testsWithCommands.cy.js` or `testsWithFunctions.cy.js`.
+- To run Cypress tests in your terminal or command line interface (CLI): `npm run test`. 
 
 ## Run
 
-- Open one terminal window and run the app -> `npm run dev`.
-- Open another terminal window and execute the test script -> `npm run test`
+- Open one terminal window and run the app: `npm run dev`.
+- Open another terminal window and execute the test script: `npm run test`
 
 ## Automated tests with Cypress
 
-Tests can be found: `cypress/e2e/testsWithCommands.cy.js`
+- Tests with functions can be found: `cypress/e2e/testsWithFunctions.cy.js`.
+- Tests with functions can be found: `cypress/e2e/testsWithCommands.cy.js`
