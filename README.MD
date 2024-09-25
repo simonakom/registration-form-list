@@ -53,7 +53,7 @@ Before you begin, ensure you have the following installed on your machine:
 ## Run
 
 - Open one terminal window and run the app: `npm run dev`.
-- Open another terminal window and execute the test script: `npm run test`
+- Open another terminal window and execute the test script: `npm run test:cmd`
 
 ## Automated tests with Cypress
 
