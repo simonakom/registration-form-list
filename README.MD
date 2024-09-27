@@ -20,20 +20,19 @@ Before you begin, ensure you have the following installed on your machine:
 
 ## Run a local HTTP server
 
+Open one terminal window:
+
 - Run: `npm run dev`. Once the server starts, it will serve project files from the root directory over the default port 8080.
 
 - To access the registration form app, choose suggested endpoint and append `/registration.html` to the URL like this: http://127.0.0.1:8080/registration.html. This endpoint will be used to test with Cypress.
 
 ## Run Cypress
 
+Open another terminal window:
+
 - To run and open 'Cypress' user interface (GUI):  `npm run test`. 
   - In Cypress UI choose E2E Testing in preffered browser and choose existing "spec": `testsWithCommands.cy.js` or `testsWithFunctions.cy.js`.
 - To run Cypress tests in your terminal or command line interface (CLI): `npm run test:cmd`. 
-
-## Run local HTTP server & Cypress
-
-- Open one terminal window and run the app: `npm run dev`.
-- Open another terminal window and execute the test script: `npm run test` or `npm run test:cmd`. 
 
 ## Automated tests with Cypress
 
