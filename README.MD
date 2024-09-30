@@ -9,7 +9,7 @@ This project is about creating simple registration form using html, css, javascr
 
 Before you begin, ensure you have the following installed on your machine:
 
-- Node.js: [Download here](https://nodejs.org/).
+- Node.js.
 - npm (Node Package Manager): Comes with Node.js installation.
 
 ## Set up 
